@@ -13,7 +13,7 @@ export function useFrameCapture() {
       videoEl?: HTMLVideoElement | null,
     ): Promise<string | null> => {
       // Try canvas capture first (fast, in-browser)
-      if ((videoEl && !videoEl.paused === false) || videoEl) {
+      if (videoEl) {
         try {
           const canvas = new OffscreenCanvas(320, 180);
           const ctx = canvas.getContext("2d");

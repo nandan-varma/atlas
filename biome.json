@@ -17,5 +17,8 @@
   },
   "javascript": {
     "formatter": { "quoteStyle": "double", "trailingCommas": "all" }
+  },
+  "files": {
+    "includes": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.js", "src/**/*.jsx"]
   }
 }

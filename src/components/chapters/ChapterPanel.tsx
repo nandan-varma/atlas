@@ -27,6 +27,7 @@ export function ChapterPanel({ videoEl }: ChapterPanelProps) {
   const reorder = useChapterStore((s) => s.reorder);
   const currentTimeMs = useVideoStore((s) => s.currentTimeMs);
   const durationMs = useVideoStore((s) => s.durationMs);
+  const chapterDurationMs = useChapterStore((s) => s.durationMs);
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -49,8 +50,8 @@ export function ChapterPanel({ videoEl }: ChapterPanelProps) {
         </span>
         <button
           type="button"
-          onClick={() => addChapter(currentTimeMs, durationMs)}
-          disabled={durationMs === 0}
+          onClick={() => addChapter(currentTimeMs)}
+          disabled={durationMs === 0 && chapterDurationMs === 0}
           className="flex items-center gap-1 rounded-md bg-[--color-accent] px-2 py-1 text-xs text-white hover:bg-[--color-accent-hover] disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
           title="Add chapter at current playback position"
         >

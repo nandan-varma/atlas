@@ -13,8 +13,11 @@ export function useExport() {
   const chapterStore = useChapterStore();
 
   const save = useCallback(
-    async (outputPath?: string, mode: "metadata_only" | "reencode" = "metadata_only") => {
-      if (!videoStore.filePath) return;
+    async (
+      outputPath?: string,
+      mode: "metadata_only" | "reencode" = "metadata_only",
+    ): Promise<boolean> => {
+      if (!videoStore.filePath) return false;
 
       setSaving(true);
       setProgress(0);
@@ -22,7 +25,7 @@ export function useExport() {
 
       const unlisten = await listen<number>("write-progress", (event) => {
         if (videoStore.durationMs > 0) {
-          setProgress(Math.min(100, (event.payload / videoStore.durationMs) * 100));
+          setProgress(Math.min(99, (event.payload / videoStore.durationMs) * 100));
         }
       });
 
@@ -37,9 +40,12 @@ export function useExport() {
           video_quality_crf: null,
         });
         metadataStore.clearDirty();
+        chapterStore.clearDirty();
         setProgress(100);
+        return true;
       } catch (e) {
         setError(String(e));
+        return false;
       } finally {
         unlisten();
         setSaving(false);

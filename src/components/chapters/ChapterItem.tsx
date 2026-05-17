@@ -83,7 +83,6 @@ export function ChapterItem({ chapter, thumbnail, videoEl }: ChapterItemProps) {
       <div className="flex-1 min-w-0">
         {editingTitle ? (
           <input
-  
             value={titleDraft}
             onChange={(e) => setTitleDraft(e.target.value)}
             onBlur={() => {
@@ -117,7 +116,7 @@ export function ChapterItem({ chapter, thumbnail, videoEl }: ChapterItemProps) {
       <TimestampInput
         value={chapter.start_time_ms}
         maxMs={durationMs}
-        onChange={(ms) => updateStartTime(chapter.id, ms, durationMs)}
+        onChange={(ms) => updateStartTime(chapter.id, ms)}
       />
 
       {/* Actions */}

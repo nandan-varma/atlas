@@ -148,6 +148,7 @@ async fn write_inner(
                             buf = buf[pos + 1..].to_string();
                             if line.starts_with("out_time_ms=") {
                                 if let Ok(ms) = line["out_time_ms=".len()..].parse::<u64>() {
+                                    // out_time_ms is in microseconds; convert to milliseconds
                                     let _ = app_clone.emit("write-progress", ms / 1000);
                                 }
                             }
