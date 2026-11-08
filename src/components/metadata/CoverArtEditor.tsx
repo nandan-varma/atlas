@@ -25,34 +25,62 @@ export function CoverArtEditor() {
   };
 
   return (
-    <div className="flex flex-col gap-1">
-      <p className="text-xs text-[--color-muted] font-medium">Cover Art</p>
+    <div className="flex flex-col gap-1.5">
+      <p className="text-xs font-semibold" style={{ color: "#9d8ec7" }}>
+        Cover Art
+      </p>
       {/* biome-ignore lint/a11y/noStaticElementInteractions: cover art drop zone */}
       {/* biome-ignore lint/a11y/useKeyWithClickEvents: file input handles keyboard */}
       <div
-        className="relative group flex h-36 w-full cursor-pointer items-center justify-center overflow-hidden rounded-lg border border-dashed border-[--color-border] bg-[--color-surface-raised] hover:border-[--color-accent] transition-colors"
+        className="relative group flex h-40 w-full cursor-pointer items-center justify-center overflow-hidden transition-all"
+        style={{
+          borderRadius: 16,
+          border: "2px dashed rgba(139, 92, 246, 0.3)",
+          background: "#f7f4ff",
+          boxShadow: "inset 0 2px 8px rgba(124, 58, 237, 0.07)",
+        }}
         onDragOver={(e) => e.preventDefault()}
         onDrop={handleDrop}
         onClick={() => fileRef.current?.click()}
       >
         {coverArt ? (
           <>
-            <img src={coverArt} alt="Cover art" className="h-full w-full object-cover" />
-            <div className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity">
+            <img
+              src={coverArt}
+              alt="Cover art"
+              className="h-full w-full object-cover"
+              style={{ borderRadius: 14 }}
+            />
+            <div
+              className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+              style={{ background: "rgba(30, 14, 75, 0.5)", borderRadius: 14 }}
+            >
               <UploadIcon size={20} className="text-white" />
             </div>
             <button
               type="button"
               onClick={handleClear}
-              className="absolute top-1.5 right-1.5 flex h-5 w-5 items-center justify-center rounded-full bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-opacity hover:bg-black cursor-pointer"
+              className="absolute top-2 right-2 flex h-6 w-6 items-center justify-center rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
+              style={{ background: "rgba(30, 14, 75, 0.7)" }}
             >
-              <XIcon size={10} />
+              <XIcon size={11} />
             </button>
           </>
         ) : (
-          <div className="flex flex-col items-center gap-2 text-[--color-muted]">
-            <ImageIcon size={24} />
-            <span className="text-xs">Drop image or click to browse</span>
+          <div className="flex flex-col items-center gap-2.5">
+            <div
+              className="flex h-11 w-11 items-center justify-center"
+              style={{
+                background: "linear-gradient(135deg, #ede9fe, #ddd6fe)",
+                borderRadius: 12,
+                boxShadow: "var(--shadow-clay-xs)",
+              }}
+            >
+              <ImageIcon size={20} style={{ color: "#7c3aed" }} />
+            </div>
+            <span className="text-xs" style={{ color: "#9d8ec7" }}>
+              Drop image or click to browse
+            </span>
           </div>
         )}
       </div>

@@ -12,15 +12,33 @@ interface AppShellProps {
 
 export function AppShell({ left, center, onSave, onOpenFile, saving }: AppShellProps) {
   return (
-    <div className="flex flex-col h-screen bg-[--color-background] overflow-hidden">
+    <div className="flex flex-col h-screen overflow-hidden p-2 gap-2">
       <TitleBar onSave={onSave} onOpenFile={onOpenFile} saving={saving} />
-      <div className="flex flex-1 overflow-hidden border-t border-[--color-border]">
+      <div className="flex flex-1 overflow-hidden gap-2 min-h-0">
         {/* Left panel */}
-        <aside className="w-[280px] shrink-0 flex flex-col border-r border-[--color-border] overflow-hidden bg-[--color-surface]">
+        <aside
+          className="w-[280px] shrink-0 flex flex-col overflow-hidden"
+          style={{
+            background: "white",
+            borderRadius: 20,
+            boxShadow: "var(--shadow-clay)",
+            border: "1.5px solid rgba(139, 92, 246, 0.15)",
+          }}
+        >
           {left}
         </aside>
         {/* Center panel */}
-        <main className="flex-1 flex flex-col overflow-hidden">{center}</main>
+        <main
+          className="flex-1 flex flex-col overflow-hidden"
+          style={{
+            background: "white",
+            borderRadius: 20,
+            boxShadow: "var(--shadow-clay)",
+            border: "1.5px solid rgba(139, 92, 246, 0.15)",
+          }}
+        >
+          {center}
+        </main>
       </div>
       <StatusBar />
     </div>

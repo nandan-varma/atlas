@@ -1,8 +1,19 @@
 import type { InputHTMLAttributes, TextareaHTMLAttributes } from "react";
 import { cn } from "@/lib/utils";
 
-const inputClass =
-  "w-full rounded-md border border-[--color-border] bg-[--color-surface-raised] px-2.5 py-1.5 text-sm text-[--color-foreground] placeholder-[--color-muted] outline-none focus:border-[--color-accent] transition-colors";
+const inputBase =
+  "w-full rounded-xl px-3 py-2 text-sm outline-none transition-all placeholder:text-[#c4b5fd]";
+
+const inputStyle = {
+  background: "#f7f4ff",
+  border: "1.5px solid rgba(139, 92, 246, 0.2)",
+  boxShadow: "inset 0 2px 6px rgba(124, 58, 237, 0.07), inset 0 1px 2px rgba(0,0,0,0.04)",
+  color: "#1e0e4b",
+};
+
+const inputFocusStyle = `
+  [&:focus] { border-color: rgba(124,58,237,0.5); box-shadow: inset 0 2px 6px rgba(124,58,237,0.1), 0 0 0 3px rgba(124,58,237,0.1); }
+`;
 
 interface FieldProps {
   label: string;
@@ -18,11 +29,27 @@ export function TextField({
 }: FieldProps & InputHTMLAttributes<HTMLInputElement>) {
   const fieldId = id ?? `field-${label.toLowerCase().replace(/\s+/g, "-")}`;
   return (
-    <div className={cn("flex flex-col gap-1", className)}>
-      <label htmlFor={fieldId} className="text-xs text-[--color-muted] font-medium">
+    <div className={cn("flex flex-col gap-1.5", className)}>
+      <label htmlFor={fieldId} className="text-xs font-semibold" style={{ color: "#9d8ec7" }}>
         {label}
       </label>
-      <input id={fieldId} {...props} className={inputClass} />
+      <input
+        id={fieldId}
+        {...props}
+        className={inputBase}
+        style={inputStyle}
+        onFocus={(e) => {
+          e.currentTarget.style.borderColor = "rgba(124,58,237,0.5)";
+          e.currentTarget.style.boxShadow =
+            "inset 0 2px 6px rgba(124,58,237,0.1), 0 0 0 3px rgba(124,58,237,0.1)";
+        }}
+        onBlur={(e) => {
+          e.currentTarget.style.borderColor = "rgba(139,92,246,0.2)";
+          e.currentTarget.style.boxShadow =
+            "inset 0 2px 6px rgba(124,58,237,0.07), inset 0 1px 2px rgba(0,0,0,0.04)";
+        }}
+      />
+      <style>{inputFocusStyle}</style>
     </div>
   );
 }
@@ -35,11 +62,27 @@ export function TextAreaField({
 }: FieldProps & TextareaHTMLAttributes<HTMLTextAreaElement>) {
   const fieldId = id ?? `field-${label.toLowerCase().replace(/\s+/g, "-")}`;
   return (
-    <div className={cn("flex flex-col gap-1", className)}>
-      <label htmlFor={fieldId} className="text-xs text-[--color-muted] font-medium">
+    <div className={cn("flex flex-col gap-1.5", className)}>
+      <label htmlFor={fieldId} className="text-xs font-semibold" style={{ color: "#9d8ec7" }}>
         {label}
       </label>
-      <textarea id={fieldId} {...props} className={cn(inputClass, "resize-none")} rows={3} />
+      <textarea
+        id={fieldId}
+        {...props}
+        className={cn(inputBase, "resize-none")}
+        style={inputStyle}
+        rows={3}
+        onFocus={(e) => {
+          e.currentTarget.style.borderColor = "rgba(124,58,237,0.5)";
+          e.currentTarget.style.boxShadow =
+            "inset 0 2px 6px rgba(124,58,237,0.1), 0 0 0 3px rgba(124,58,237,0.1)";
+        }}
+        onBlur={(e) => {
+          e.currentTarget.style.borderColor = "rgba(139,92,246,0.2)";
+          e.currentTarget.style.boxShadow =
+            "inset 0 2px 6px rgba(124,58,237,0.07), inset 0 1px 2px rgba(0,0,0,0.04)";
+        }}
+      />
     </div>
   );
 }
@@ -54,8 +97,8 @@ export function SelectField({ label, options, value, onChange, id }: SelectField
   const fieldId = id ?? `field-${label.toLowerCase().replace(/\s+/g, "-")}`;
   const listId = `list-${fieldId}`;
   return (
-    <div className="flex flex-col gap-1">
-      <label htmlFor={fieldId} className="text-xs text-[--color-muted] font-medium">
+    <div className="flex flex-col gap-1.5 flex-1">
+      <label htmlFor={fieldId} className="text-xs font-semibold" style={{ color: "#9d8ec7" }}>
         {label}
       </label>
       <input
@@ -63,7 +106,18 @@ export function SelectField({ label, options, value, onChange, id }: SelectField
         list={listId}
         value={value}
         onChange={(e) => onChange(e.target.value)}
-        className={inputClass}
+        className={inputBase}
+        style={inputStyle}
+        onFocus={(e) => {
+          e.currentTarget.style.borderColor = "rgba(124,58,237,0.5)";
+          e.currentTarget.style.boxShadow =
+            "inset 0 2px 6px rgba(124,58,237,0.1), 0 0 0 3px rgba(124,58,237,0.1)";
+        }}
+        onBlur={(e) => {
+          e.currentTarget.style.borderColor = "rgba(139,92,246,0.2)";
+          e.currentTarget.style.boxShadow =
+            "inset 0 2px 6px rgba(124,58,237,0.07), inset 0 1px 2px rgba(0,0,0,0.04)";
+        }}
       />
       <datalist id={listId}>
         {options.map((o) => (

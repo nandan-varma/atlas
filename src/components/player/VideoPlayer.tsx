@@ -1,5 +1,5 @@
 import { convertFileSrc } from "@tauri-apps/api/core";
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback, useRef } from "react";
 import { formatDuration } from "@/lib/timestamps";
 import { useChapterStore, useVideoStore } from "@/store";
 
@@ -21,23 +21,13 @@ export function VideoPlayer({ videoElRef }: VideoPlayerProps) {
 
   const src = filePath ? convertFileSrc(filePath) : null;
 
-  useEffect(() => {
+  const onTimeUpdate = useCallback(() => {
     const el = videoRef.current;
-    if (!el) return;
+    if (el) setCurrentTime(Math.floor(el.currentTime * 1000));
+  }, [setCurrentTime, videoRef]);
 
-    const onTimeUpdate = () => setCurrentTime(Math.floor(el.currentTime * 1000));
-    const onPlay = () => setPlaying(true);
-    const onPause = () => setPlaying(false);
-
-    el.addEventListener("timeupdate", onTimeUpdate);
-    el.addEventListener("play", onPlay);
-    el.addEventListener("pause", onPause);
-    return () => {
-      el.removeEventListener("timeupdate", onTimeUpdate);
-      el.removeEventListener("play", onPlay);
-      el.removeEventListener("pause", onPause);
-    };
-  }, [setCurrentTime, setPlaying, videoRef]);
+  const onPlay = useCallback(() => setPlaying(true), [setPlaying]);
+  const onPause = useCallback(() => setPlaying(false), [setPlaying]);
 
   const handleSeek = useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
@@ -54,11 +44,11 @@ export function VideoPlayer({ videoElRef }: VideoPlayerProps) {
   const progress = durationMs > 0 ? (currentTimeMs / durationMs) * 100 : 0;
 
   return (
-    <div className="flex flex-col gap-2 p-3">
-      {/* Video element */}
+    <div className="flex flex-col gap-0 overflow-hidden">
+      {/* Video */}
       <div
-        className="relative w-full bg-black rounded-lg overflow-hidden"
-        style={{ aspectRatio: "16/9" }}
+        className="relative w-full"
+        style={{ aspectRatio: "16/9", background: "#0a0014", borderRadius: "18px 18px 0 0" }}
       >
         {src ? (
           // biome-ignore lint/a11y/useMediaCaption: video editor — captions not applicable
@@ -66,7 +56,11 @@ export function VideoPlayer({ videoElRef }: VideoPlayerProps) {
             ref={videoRef}
             src={src}
             className="w-full h-full object-contain"
+            style={{ borderRadius: "18px 18px 0 0" }}
             controls={false}
+            onTimeUpdate={onTimeUpdate}
+            onPlay={onPlay}
+            onPause={onPause}
             onClick={() => {
               const el = videoRef.current;
               if (!el) return;
@@ -74,25 +68,41 @@ export function VideoPlayer({ videoElRef }: VideoPlayerProps) {
             }}
           />
         ) : (
-          <div className="flex h-full items-center justify-center text-[--color-muted] text-sm">
+          <div
+            className="flex h-full items-center justify-center text-sm"
+            style={{ color: "#5b4a8a" }}
+          >
             No video loaded
           </div>
         )}
       </div>
 
-      {/* Seek bar */}
-      <div className="flex flex-col gap-1">
-        {/* biome-ignore lint/a11y/noStaticElementInteractions: seek bar requires mouse interaction */}
+      {/* Seek bar + time */}
+      <div
+        className="flex flex-col gap-2 px-4 py-3"
+        style={{ background: "#0a0014", borderRadius: "0 0 18px 18px" }}
+      >
+        {/* biome-ignore lint/a11y/noStaticElementInteractions: seek bar */}
         {/* biome-ignore lint/a11y/useKeyWithClickEvents: arrow key seeking handled globally */}
         <div
           ref={progressRef}
-          className="relative h-2 cursor-pointer rounded-full bg-[--color-border] group"
+          className="relative h-2.5 cursor-pointer group"
+          style={{
+            background: "rgba(139, 92, 246, 0.2)",
+            borderRadius: 99,
+            boxShadow: "inset 0 1px 3px rgba(0,0,0,0.4)",
+          }}
           onClick={handleSeek}
         >
           {/* Progress fill */}
           <div
-            className="absolute left-0 top-0 h-full rounded-full bg-[--color-accent] transition-none"
-            style={{ width: `${progress}%` }}
+            className="absolute left-0 top-0 h-full transition-none"
+            style={{
+              width: `${progress}%`,
+              background: "linear-gradient(90deg, #8b5cf6 0%, #a855f7 100%)",
+              borderRadius: 99,
+              boxShadow: "0 0 8px rgba(139, 92, 246, 0.6)",
+            }}
           />
           {/* Chapter tick marks */}
           {chapters.map((ch) => {
@@ -100,21 +110,24 @@ export function VideoPlayer({ videoElRef }: VideoPlayerProps) {
             return (
               <div
                 key={ch.id}
-                className="absolute top-0 h-full w-0.5 bg-white/40"
-                style={{ left: `${pct}%` }}
+                className="absolute top-0 h-full w-0.5"
+                style={{ left: `${pct}%`, background: "rgba(255, 255, 255, 0.35)" }}
                 title={ch.title}
               />
             );
           })}
           {/* Playhead thumb */}
           <div
-            className="absolute top-1/2 -translate-y-1/2 h-3 w-3 rounded-full bg-white shadow opacity-0 group-hover:opacity-100 transition-opacity"
-            style={{ left: `calc(${progress}% - 6px)` }}
+            className="absolute top-1/2 -translate-y-1/2 h-4 w-4 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
+            style={{
+              left: `calc(${progress}% - 8px)`,
+              background: "white",
+              boxShadow: "0 2px 8px rgba(124, 58, 237, 0.5)",
+            }}
           />
         </div>
 
-        {/* Time display */}
-        <div className="flex justify-between text-xs text-[--color-muted]">
+        <div className="flex justify-between text-xs" style={{ color: "rgba(196, 181, 253, 0.8)" }}>
           <span>{formatDuration(currentTimeMs)}</span>
           <span>{formatDuration(durationMs)}</span>
         </div>
