@@ -20,19 +20,33 @@ export function TitleBar({ onSave, onOpenFile, saving }: TitleBarProps) {
 
   return (
     <div
-      className="flex h-9 items-center justify-between select-none shrink-0 bg-[--color-surface]"
-      style={{ WebkitAppRegion: "drag" } as React.CSSProperties}
+      className="flex h-11 items-center justify-between select-none shrink-0 px-3"
+      style={
+        {
+          background: "white",
+          borderRadius: 16,
+          boxShadow: "var(--shadow-clay-sm)",
+          border: "1.5px solid rgba(139, 92, 246, 0.15)",
+          WebkitAppRegion: "drag",
+        } as React.CSSProperties
+      }
     >
       {/* Left — macOS traffic light spacer + open file */}
       <div
-        className="flex items-center gap-1 pl-20"
+        className="flex items-center gap-1.5 pl-16"
         style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
       >
         <button
           type="button"
           onClick={onOpenFile}
           title="Open file (⌘O)"
-          className="flex items-center gap-1 rounded-md px-2 py-1 text-xs text-[--color-muted] hover:text-[--color-foreground] hover:bg-[--color-surface-raised] transition-colors cursor-pointer"
+          className="flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-medium cursor-pointer transition-all"
+          style={{
+            background: "#f7f4ff",
+            color: "#7c3aed",
+            boxShadow: "var(--shadow-clay-xs)",
+            border: "1.5px solid rgba(139, 92, 246, 0.18)",
+          }}
         >
           <FolderOpen size={13} />
           <span className="hidden sm:inline">Open</span>
@@ -40,16 +54,32 @@ export function TitleBar({ onSave, onOpenFile, saving }: TitleBarProps) {
       </div>
 
       {/* Center — app name + dirty indicator */}
-      <div className="flex items-center gap-2 text-sm font-medium text-[--color-foreground]">
-        Atlas
+      <div className="flex items-center gap-2">
+        <span
+          className="text-sm font-bold tracking-tight"
+          style={{
+            background: "linear-gradient(135deg, #7c3aed 0%, #a855f7 50%, #ec4899 100%)",
+            WebkitBackgroundClip: "text",
+            WebkitTextFillColor: "transparent",
+          }}
+        >
+          Atlas
+        </span>
         {isDirty && (
-          <span className="h-1.5 w-1.5 rounded-full bg-[--color-accent]" title="Unsaved changes" />
+          <span
+            className="h-2 w-2 rounded-full"
+            style={{
+              background: "linear-gradient(135deg, #f97316, #ef4444)",
+              boxShadow: "0 0 6px rgba(249, 115, 22, 0.6)",
+            }}
+            title="Unsaved changes"
+          />
         )}
       </div>
 
       {/* Right — undo/redo + save */}
       <div
-        className="flex items-center gap-1 pr-3"
+        className="flex items-center gap-1.5"
         style={{ WebkitAppRegion: "no-drag" } as React.CSSProperties}
       >
         <button
@@ -58,11 +88,19 @@ export function TitleBar({ onSave, onOpenFile, saving }: TitleBarProps) {
           disabled={!canUndo}
           title="Undo (⌘Z)"
           className={cn(
-            "rounded-md p-1 transition-colors",
-            canUndo
-              ? "text-[--color-muted] hover:text-[--color-foreground] hover:bg-[--color-surface-raised] cursor-pointer"
-              : "text-[--color-border] cursor-not-allowed",
+            "rounded-xl p-1.5 transition-all",
+            canUndo ? "cursor-pointer" : "opacity-30 cursor-not-allowed",
           )}
+          style={
+            canUndo
+              ? {
+                  background: "#f7f4ff",
+                  color: "#7c3aed",
+                  boxShadow: "var(--shadow-clay-xs)",
+                  border: "1.5px solid rgba(139, 92, 246, 0.18)",
+                }
+              : { color: "#c4b5fd" }
+          }
         >
           <Undo2 size={13} />
         </button>
@@ -72,16 +110,24 @@ export function TitleBar({ onSave, onOpenFile, saving }: TitleBarProps) {
           disabled={!canRedo}
           title="Redo (⌘⇧Z)"
           className={cn(
-            "rounded-md p-1 transition-colors",
-            canRedo
-              ? "text-[--color-muted] hover:text-[--color-foreground] hover:bg-[--color-surface-raised] cursor-pointer"
-              : "text-[--color-border] cursor-not-allowed",
+            "rounded-xl p-1.5 transition-all",
+            canRedo ? "cursor-pointer" : "opacity-30 cursor-not-allowed",
           )}
+          style={
+            canRedo
+              ? {
+                  background: "#f7f4ff",
+                  color: "#7c3aed",
+                  boxShadow: "var(--shadow-clay-xs)",
+                  border: "1.5px solid rgba(139, 92, 246, 0.18)",
+                }
+              : { color: "#c4b5fd" }
+          }
         >
           <Redo2 size={13} />
         </button>
 
-        <div className="w-px h-4 bg-[--color-border] mx-1" />
+        <div className="w-px h-5 mx-1" style={{ background: "rgba(139, 92, 246, 0.2)" }} />
 
         <button
           type="button"
@@ -89,11 +135,18 @@ export function TitleBar({ onSave, onOpenFile, saving }: TitleBarProps) {
           disabled={!isDirty || saving}
           title={isDirty ? "Save (⌘S)" : "No changes to save"}
           className={cn(
-            "flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium transition-all",
-            isDirty && !saving
-              ? "bg-[--color-accent] text-white hover:bg-[--color-accent-hover] cursor-pointer"
-              : "text-[--color-muted] cursor-not-allowed opacity-50",
+            "flex items-center gap-1.5 rounded-xl px-3 py-1.5 text-xs font-semibold transition-all",
+            isDirty && !saving ? "cursor-pointer" : "opacity-40 cursor-not-allowed",
           )}
+          style={
+            isDirty && !saving
+              ? {
+                  background: "linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)",
+                  color: "white",
+                  boxShadow: "var(--shadow-clay-accent)",
+                }
+              : { background: "#f0ebff", color: "#9d8ec7" }
+          }
         >
           <Save size={12} />
           {saving ? "Saving…" : "Save"}

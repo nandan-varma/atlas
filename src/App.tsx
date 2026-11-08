@@ -127,11 +127,11 @@ export default function App() {
 
   if (!filePath) {
     return (
-      <>
+      <div className="h-screen w-screen">
         <DropZone onFile={loadFile} />
         {loading && <LoadingOverlay message="Opening video…" />}
-        <Toaster position="bottom-right" theme="dark" />
-      </>
+        <Toaster position="bottom-right" theme="light" />
+      </div>
     );
   }
 
@@ -145,7 +145,10 @@ export default function App() {
         center={
           <div className="flex flex-col flex-1 overflow-hidden">
             <VideoPlayer videoElRef={videoElRef} />
-            <div className="flex-1 overflow-hidden border-t border-[--color-border]">
+            <div
+              className="flex-1 overflow-hidden"
+              style={{ borderTop: "1.5px solid rgba(139, 92, 246, 0.1)" }}
+            >
               <ChapterPanel videoEl={videoElRef.current} />
             </div>
           </div>
@@ -157,17 +160,33 @@ export default function App() {
 
       {loading && <LoadingOverlay message="Opening video…" />}
 
-      <Toaster position="bottom-right" theme="dark" />
+      <Toaster position="bottom-right" theme="light" />
     </>
   );
 }
 
 function LoadingOverlay({ message }: { message: string }) {
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
-      <div className="flex items-center gap-3 rounded-xl bg-[--color-surface] border border-[--color-border] px-6 py-4 shadow-2xl">
-        <div className="h-4 w-4 rounded-full border-2 border-[--color-accent] border-t-transparent animate-spin" />
-        <span className="text-sm text-[--color-foreground]">{message}</span>
+    <div
+      className="fixed inset-0 z-50 flex items-center justify-center"
+      style={{ background: "rgba(10, 0, 30, 0.45)", backdropFilter: "blur(8px)" }}
+    >
+      <div
+        className="flex items-center gap-3 px-6 py-4"
+        style={{
+          background: "white",
+          borderRadius: 18,
+          boxShadow: "var(--shadow-clay-lg)",
+          border: "1.5px solid rgba(139, 92, 246, 0.2)",
+        }}
+      >
+        <div
+          className="h-5 w-5 rounded-full border-2 border-t-transparent animate-spin"
+          style={{ borderColor: "#8b5cf6", borderTopColor: "transparent" }}
+        />
+        <span className="text-sm font-medium" style={{ color: "#1e0e4b" }}>
+          {message}
+        </span>
       </div>
     </div>
   );

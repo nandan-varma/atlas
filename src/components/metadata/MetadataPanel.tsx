@@ -55,17 +55,28 @@ export function MetadataPanel() {
   return (
     <div className="flex flex-col h-full overflow-hidden">
       {/* Tabs */}
-      <div className="flex border-b border-[--color-border] shrink-0">
+      <div
+        className="flex p-2 gap-1 shrink-0"
+        style={{ borderBottom: "1.5px solid rgba(139, 92, 246, 0.1)" }}
+      >
         {(["general", "details"] as Tab[]).map((t) => (
           <button
             key={t}
             type="button"
             onClick={() => setTab(t)}
-            className={`flex-1 py-2 text-xs font-medium capitalize transition-colors cursor-pointer ${
+            className="flex-1 py-1.5 text-xs font-semibold capitalize rounded-xl cursor-pointer transition-all"
+            style={
               tab === t
-                ? "text-[--color-foreground] border-b-2 border-[--color-accent]"
-                : "text-[--color-muted] hover:text-[--color-foreground]"
-            }`}
+                ? {
+                    background: "linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)",
+                    color: "white",
+                    boxShadow: "var(--shadow-clay-accent)",
+                  }
+                : {
+                    color: "#9d8ec7",
+                    background: "transparent",
+                  }
+            }
           >
             {t}
           </button>

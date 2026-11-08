@@ -1,15 +1,42 @@
 @import "tailwindcss";
 
 @theme {
-  --color-background: oklch(0.09 0.01 240);
-  --color-surface: oklch(0.13 0.01 240);
-  --color-surface-raised: oklch(0.16 0.01 240);
-  --color-border: oklch(0.22 0.01 240);
-  --color-muted: oklch(0.45 0.01 240);
-  --color-foreground: oklch(0.93 0.005 240);
-  --color-accent: oklch(0.65 0.18 250);
-  --color-accent-hover: oklch(0.70 0.18 250);
-  --color-destructive: oklch(0.55 0.2 25);
+  /* Palette */
+  --color-background: #ede8ff;
+  --color-surface: #ffffff;
+  --color-surface-raised: #f7f4ff;
+  --color-border: rgba(139, 92, 246, 0.18);
+  --color-muted: #9d8ec7;
+  --color-foreground: #1e0e4b;
+  --color-accent: #7c3aed;
+  --color-accent-hover: #6d28d9;
+  --color-destructive: #ef4444;
+
+  /* Clay shadows */
+  --shadow-clay-xs: 0 2px 8px rgba(124, 58, 237, 0.12), 0 1px 3px rgba(0, 0, 0, 0.06),
+    inset 0 -2px 0 rgba(0, 0, 0, 0.06);
+  --shadow-clay-sm: 0 4px 16px rgba(124, 58, 237, 0.14), 0 2px 6px rgba(0, 0, 0, 0.07),
+    inset 0 -3px 0 rgba(0, 0, 0, 0.06);
+  --shadow-clay: 0 8px 28px rgba(124, 58, 237, 0.18), 0 4px 12px rgba(0, 0, 0, 0.08),
+    inset 0 -4px 0 rgba(0, 0, 0, 0.06);
+  --shadow-clay-lg: 0 16px 48px rgba(124, 58, 237, 0.22), 0 8px 20px rgba(0, 0, 0, 0.1),
+    inset 0 -5px 0 rgba(0, 0, 0, 0.07);
+  --shadow-clay-accent: 0 8px 28px rgba(124, 58, 237, 0.35), 0 4px 12px rgba(124, 58, 237, 0.2),
+    inset 0 -4px 0 rgba(109, 40, 217, 0.35);
+}
+
+@utility clay-card {
+  background: white;
+  border-radius: 18px;
+  box-shadow: var(--shadow-clay);
+  border: 1.5px solid rgba(139, 92, 246, 0.15);
+}
+
+@utility clay-card-sm {
+  background: white;
+  border-radius: 14px;
+  box-shadow: var(--shadow-clay-sm);
+  border: 1.5px solid rgba(139, 92, 246, 0.12);
 }
 
 * {
@@ -23,26 +50,34 @@ body,
   margin: 0;
   padding: 0;
   overflow: hidden;
-  background-color: var(--color-background);
-  color: var(--color-foreground);
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
+/* Gradient mesh background */
+body {
+  background-color: #ede8ff;
+  background-image: radial-gradient(at 20% 20%, rgba(216, 180, 254, 0.6) 0px, transparent 50%),
+    radial-gradient(at 80% 10%, rgba(196, 181, 253, 0.5) 0px, transparent 45%),
+    radial-gradient(at 60% 80%, rgba(253, 186, 255, 0.4) 0px, transparent 45%),
+    radial-gradient(at 10% 70%, rgba(167, 243, 208, 0.3) 0px, transparent 40%),
+    radial-gradient(at 90% 60%, rgba(186, 230, 253, 0.35) 0px, transparent 40%);
+}
+
 /* Custom scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 5px;
+  height: 5px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: var(--color-border);
-  border-radius: 3px;
+  background: rgba(139, 92, 246, 0.25);
+  border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--color-muted);
+  background: rgba(139, 92, 246, 0.45);
 }
 
 /* Vidstack overrides */

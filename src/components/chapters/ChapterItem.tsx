@@ -1,6 +1,6 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import { Camera, GripVertical, ImagePlus, Trash2 } from "lucide-react";
+import { Camera, GripVertical, ImagePlus, Loader2, Trash2 } from "lucide-react";
 import { useRef, useState } from "react";
 import { useFrameCapture } from "@/hooks/useFrameCapture";
 import { useChapterStore, useVideoStore } from "@/store";
@@ -33,12 +33,10 @@ export function ChapterItem({ chapter, thumbnail, videoEl }: ChapterItemProps) {
   const style = {
     transform: CSS.Transform.toString(transform),
     transition,
-    opacity: isDragging ? 0.5 : 1,
   };
 
   const handleCapture = async () => {
     setCapturing(true);
-    // Seek video to chapter start first
     if (videoEl) {
       videoEl.currentTime = chapter.start_time_ms / 1000;
       await new Promise((r) => setTimeout(r, 100));
@@ -56,26 +54,49 @@ export function ChapterItem({ chapter, thumbnail, videoEl }: ChapterItemProps) {
   return (
     <div
       ref={setNodeRef}
-      style={style}
-      className="flex items-center gap-2 rounded-lg border border-[--color-border] bg-[--color-surface] p-2 group"
+      style={{
+        ...style,
+        opacity: isDragging ? 0.5 : 1,
+        background: "white",
+        borderRadius: 14,
+        boxShadow: isDragging ? "var(--shadow-clay)" : "var(--shadow-clay-sm)",
+        border: "1.5px solid rgba(139, 92, 246, 0.12)",
+        transform: isDragging
+          ? `${CSS.Transform.toString(transform)} scale(1.02)`
+          : (CSS.Transform.toString(transform) ?? undefined),
+      }}
+      className="flex items-center gap-2 p-2 group"
     >
       {/* Drag handle */}
       <button
         {...attributes}
         {...listeners}
-        className="cursor-grab text-[--color-muted] hover:text-[--color-foreground] shrink-0"
+        className="cursor-grab active:cursor-grabbing shrink-0 rounded-lg p-1 transition-colors"
+        style={{ color: "rgba(139, 92, 246, 0.35)" }}
       >
         <GripVertical size={14} />
       </button>
 
       {/* Thumbnail */}
-      <div className="relative shrink-0 h-9 w-16 rounded overflow-hidden bg-[--color-surface-raised] flex items-center justify-center">
+      <div
+        className="relative shrink-0 h-10 w-16 overflow-hidden flex items-center justify-center"
+        style={{
+          borderRadius: 10,
+          background: "linear-gradient(135deg, #ede9fe, #ddd6fe)",
+          boxShadow: "inset 0 2px 6px rgba(124, 58, 237, 0.1)",
+        }}
+      >
         {thumbnail ? (
-          <img src={thumbnail} alt="" className="h-full w-full object-cover" />
+          <img
+            src={thumbnail}
+            alt=""
+            className="h-full w-full object-cover"
+            style={{ borderRadius: 10 }}
+          />
+        ) : capturing ? (
+          <Loader2 size={14} style={{ color: "#7c3aed" }} className="animate-spin" />
         ) : (
-          <div className="text-[--color-border]">
-            <Camera size={14} />
-          </div>
+          <Camera size={14} style={{ color: "rgba(124, 58, 237, 0.5)" }} />
         )}
       </div>
 
@@ -96,11 +117,19 @@ export function ChapterItem({ chapter, thumbnail, videoEl }: ChapterItemProps) {
                 setEditingTitle(false);
               }
             }}
-            className="w-full rounded border border-[--color-accent] bg-[--color-surface-raised] px-1.5 py-0.5 text-xs text-[--color-foreground] outline-none"
+            className="w-full text-xs px-2 py-1 outline-none"
+            style={{
+              background: "#f7f4ff",
+              borderRadius: 8,
+              border: "1.5px solid rgba(124, 58, 237, 0.4)",
+              boxShadow: "0 0 0 3px rgba(124, 58, 237, 0.1)",
+              color: "#1e0e4b",
+            }}
           />
         ) : (
           <p
-            className="truncate text-xs text-[--color-foreground] cursor-text"
+            className="truncate text-xs font-medium cursor-text"
+            style={{ color: "#1e0e4b" }}
             onDoubleClick={() => {
               setTitleDraft(chapter.title);
               setEditingTitle(true);
@@ -126,25 +155,28 @@ export function ChapterItem({ chapter, thumbnail, videoEl }: ChapterItemProps) {
           onClick={handleCapture}
           disabled={capturing}
           title="Capture frame"
-          className="rounded p-1 text-[--color-muted] hover:text-[--color-foreground] hover:bg-[--color-surface-raised] cursor-pointer"
+          className="rounded-lg p-1.5 transition-all cursor-pointer"
+          style={{ color: "#9d8ec7", background: "#f7f4ff" }}
         >
-          <Camera size={13} />
+          <Camera size={12} />
         </button>
         <button
           type="button"
           onClick={() => fileRef.current?.click()}
           title="Upload image"
-          className="rounded p-1 text-[--color-muted] hover:text-[--color-foreground] hover:bg-[--color-surface-raised] cursor-pointer"
+          className="rounded-lg p-1.5 transition-all cursor-pointer"
+          style={{ color: "#9d8ec7", background: "#f7f4ff" }}
         >
-          <ImagePlus size={13} />
+          <ImagePlus size={12} />
         </button>
         <button
           type="button"
           onClick={() => removeChapter(chapter.id)}
           title="Remove chapter"
-          className="rounded p-1 text-[--color-muted] hover:text-[--color-destructive] hover:bg-[--color-surface-raised] cursor-pointer"
+          className="rounded-lg p-1.5 transition-all cursor-pointer"
+          style={{ color: "#ef4444", background: "#fff0f0" }}
         >
-          <Trash2 size={13} />
+          <Trash2 size={12} />
         </button>
       </div>
 

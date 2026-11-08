@@ -41,18 +41,42 @@ export function ChapterPanel({ videoEl }: ChapterPanelProps) {
     }
   };
 
+  const canAdd = durationMs > 0 || chapterDurationMs > 0;
+
   return (
     <div className="flex flex-col h-full overflow-hidden">
       {/* Toolbar */}
-      <div className="flex items-center justify-between px-3 py-2 border-b border-[--color-border] shrink-0">
-        <span className="text-xs font-semibold text-[--color-foreground]">
-          Chapters {chapters.length > 0 && `(${chapters.length})`}
-        </span>
+      <div
+        className="flex items-center justify-between px-4 py-2.5 shrink-0"
+        style={{ borderBottom: "1.5px solid rgba(139, 92, 246, 0.1)" }}
+      >
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-bold" style={{ color: "#1e0e4b" }}>
+            Chapters
+          </span>
+          {chapters.length > 0 && (
+            <span
+              className="inline-flex items-center justify-center h-4 min-w-4 rounded-full text-[10px] font-bold px-1"
+              style={{
+                background: "linear-gradient(135deg, #ede9fe, #ddd6fe)",
+                color: "#7c3aed",
+                boxShadow: "var(--shadow-clay-xs)",
+              }}
+            >
+              {chapters.length}
+            </span>
+          )}
+        </div>
         <button
           type="button"
           onClick={() => addChapter(currentTimeMs)}
-          disabled={durationMs === 0 && chapterDurationMs === 0}
-          className="flex items-center gap-1 rounded-md bg-[--color-accent] px-2 py-1 text-xs text-white hover:bg-[--color-accent-hover] disabled:opacity-40 disabled:cursor-not-allowed transition-colors cursor-pointer"
+          disabled={!canAdd}
+          className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold text-white cursor-pointer transition-all disabled:opacity-40 disabled:cursor-not-allowed"
+          style={{
+            background: "linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%)",
+            borderRadius: 12,
+            boxShadow: canAdd ? "var(--shadow-clay-accent)" : "none",
+          }}
           title="Add chapter at current playback position"
         >
           <PlusIcon size={12} />
@@ -63,9 +87,26 @@ export function ChapterPanel({ videoEl }: ChapterPanelProps) {
       {/* Chapter list */}
       <div className="flex-1 overflow-y-auto p-2">
         {chapters.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full gap-2 text-[--color-muted]">
-            <p className="text-xs text-center">
-              No chapters yet. Play the video and click "Add" to mark chapter points.
+          <div
+            className="flex flex-col items-center justify-center h-full gap-3 mx-2 my-2"
+            style={{
+              background: "#f7f4ff",
+              borderRadius: 16,
+              border: "2px dashed rgba(139, 92, 246, 0.2)",
+            }}
+          >
+            <div
+              className="flex h-10 w-10 items-center justify-center"
+              style={{
+                background: "linear-gradient(135deg, #ede9fe, #ddd6fe)",
+                borderRadius: 12,
+                boxShadow: "var(--shadow-clay-xs)",
+              }}
+            >
+              <PlusIcon size={18} style={{ color: "#7c3aed" }} />
+            </div>
+            <p className="text-xs text-center px-6" style={{ color: "#9d8ec7" }}>
+              Play the video and click "Add" to mark chapter points
             </p>
           </div>
         ) : (
@@ -78,7 +119,7 @@ export function ChapterPanel({ videoEl }: ChapterPanelProps) {
               items={chapters.map((c) => c.id)}
               strategy={verticalListSortingStrategy}
             >
-              <div className="flex flex-col gap-1.5">
+              <div className="flex flex-col gap-2">
                 {chapters.map((chapter) => (
                   <ChapterItem
                     key={chapter.id}
